@@ -1,489 +1,3 @@
- Gemini
-Rozwój Aplikacji Pomysłów w Firebase
-Nowy czat
-Moje rzeczy
-Gemy
-Czaty
-Rozwój Aplikacji Pomysłów w Firebase
-Tworzenie nowej gałęzi z origin/develop
-Dodawanie użytkowników do Google Play Console
-Problem z instalacją Android Auto
-Identyfikacja rośliny: Łopian
-Ideaon: Droga do Produkcji
-Wdrożenie aplikacji mobilnej krok po kroku
-Wygeneruj prosty obrazek martwa.natura namalowany farbami olejnymi
-Numerologia i Astrologia: Twoja Droga Życia
-Czym jest topnik przy lutowaniu?
-Earth HQ Token Not Found Error
-Rozwiązywanie Konfliktów w Zespole IT
-Jak utrwalić grzyby w żywicy
-Łódź, Polska Na podstawie Twoich miejsc (praca) Zaktualizuj lokalizację
-Rozmowa z Gemini
-
-przenieś to do pliku MD
-Architekt MVP & Specyfikacji
-Niestandardowy Gem
-
-    Zapytanie zostało przetworzone
-
-Twoja specyfikacja wymagań dla funkcjonalności Szybki Dostęp (Speed-to-Thought) jest gotowa.
-
-Plik został przygotowany zgodnie z Twoimi wytycznymi:
-
-    Technologia: Uwzględnia sqflite, shared_preferences oraz wzorzec LocalIdeaRepository.
-
-    Logika: Tytuł jest opcjonalny, a fallbackiem jest numer ID z bazy danych.
-
-    Jakość: Wymusza pisanie testów jednostkowych dla każdej zmiany.
-
-    Struktura: Jest przygotowana tak, aby model LLM w Google Antigravity mógł edytować statusy [TODO] -> [DONE] bez niszczenia reszty dokumentu.
-
-Twoja plik Markdown (MD) jest gotowy do pobrania:
-Ikona MD
- speed_to_t...ought_spec 
-MD
-
-Możesz teraz wgrać ten plik do swojego środowiska pracy jako nadrzędny dokument instruktażowy dla modelu. Czy pomóc Ci przygotować analogiczną specyfikację dla kolejnego punktu, czyli Trybu Samochodowego?
-
-w załączniku informacje o tym co zostało wykonane przez model, rozpisz punkt 4 na bardziej szczegółowe podejście, zaproponuj modelowi separację tej funkcjonalności tak żeby jaknajmniej interferowałą z aktualnym kodem skoro wymaga integracji z dodatkowymi językami. Zachowanie działania aplikacji i aktualnych funkcji postaw jako nadrzędny priorytet. Jako wynik stwórz plik md (wybierz język angielski jeśli zużyje on znacząco mniej tokenów, jeśli różnica będzie niewielka, zostań przy polskim dla wygody programisty).
-Architekt MVP & Specyfikacji
-Niestandardowy Gem
-
-Zgodnie z Twoją prośbą, przygotowałem nowy plik ze specyfikacją rozwijającą punkt 4.
-
-Zaproponowałem w niej wzorzec architektoniczny polegający na głębokich linkach ("Deep Link Bridge"), aby zagwarantować pełne bezpieczeństwo obecnej warstwy danych, z zachowaniem Twojego priorytetu nieinterferowania z obecnym kodem i lokalną bazą w Flutterze. Plik przygotowany został w języku polskim, co powinno zoptymalizować pracę ze względu na ujednolicenie ze strukturą poprzednich dokumentów.  
-
-Plik Markdown jest gotowy do wgrania do Google Antigravity:
-[file-tag: code-generated-file-0-1778616636714885978]
-
-gdzie mogę pobrać plik?
-Architekt MVP & Specyfikacji
-Niestandardowy Gem
-
-Plik native_intents_spec.md został wygenerowany w mojej poprzedniej odpowiedzi. Powinien on być tam widoczny jako interaktywny element (tzw. "file chip") o nazwie pliku, który możesz kliknąć, aby go pobrać lub otworzyć.
-
-Jeśli z jakiegoś powodu nie widzisz tego elementu w historii czatu lub wolisz, aby plik trafił bezpośrednio do Twojego ekosystemu pracy, mogę go przesłać na Twój Dysk Google. Dzięki temu będziesz mieć do niego stały dostęp i łatwo zaimportujesz go do Google Antigravity.
-
-Czy chcesz, abym przesłał ten plik na Twój Dysk Google?
-
-nie widze nadal liku
-Architekt MVP & Specyfikacji
-Niestandardowy Gem
-
-Przepraszam za ten problem techniczny – wygląda na to, że interfejs nie wygenerował poprawnie linku do pobrania pliku.
-
-Abyśmy nie tracili czasu, wklejam całą, gotową zawartość pliku Markdown poniżej. Możesz po prostu skopiować ten tekst i wkleić go u siebie do nowego pliku o nazwie np. native_intents_spec.md:
-Markdown
-
-# Specyfikacja Implementacyjna: Systemowe Skróty Natywne (App Intents / Shortcuts)
-
-**Status Projektu:** Rozszerzenie natywne (iOS Swift / Android Kotlin)
-**Nadrzędny Priorytet:** Całkowita izolacja logiki natywnej od obecnego kodu Dart. Brak ingerencji w działające funkcje (CRUD, i18n, lokalna baza).
-**Środowisko:** Google Antigravity
-
-## 1. Koncepcja Architektoniczna: Wzorzec "Deep Link Bridge"
-
-Aby zminimalizować ryzyko interferencji z obecnym kodem Fluttera i uniknąć problemów z blokowaniem bazy `sqflite` (jednoczesny dostęp z Swift/Kotlin i Dart), implementacja **nie będzie** zapisywać danych bezpośrednio do bazy z poziomu kodu natywnego.
-
-Zamiast tego użyjemy mechanizmu wywoływania głębokich linków (Deep Links) lub kanałów (MethodChannel) jako wyzwalaczy (Triggers).
-1. **Warstwa Natywna (OS)** przechwytuje akcję (np. naciśnięcie Action Button na iOS).
-2. **Warstwa Natywna** buduje systemowy URI (np. `ideaon://intent/new_idea?mode=text`).
-3. **Warstwa Flutter (Dart)** odbiera URI przez dedykowany serwis, parsuje go i wykorzystuje istniejącą, przetestowaną trasę `/new-idea`.
-
-## 2. Architektura Separacji (Izolacja Kodu)
-
-- **Flutter (Dart):** Utworzenie jednego, niezależnego pliku `lib/services/native_intent_service.dart`. Klasa ta będzie wyłącznie nasłuchiwać wywołań.
-- **iOS (Swift):** Stworzenie osobnego Targetu w Xcode dla App Intents (np. `IdeaonIntents`). Cały kod Swift będzie odizolowany od bazowego delegata, z wyjątkiem niezbędnej rejestracji handlera URL.
-- **Android (Kotlin/XML):** Użycie statycznych skrótów `shortcuts.xml` lub manifestu w celu nasłuchiwania na systemowe Intenty, bez modyfikacji logiki `MainActivity.kt` poza odbiorem parametrów startowych.
-
-## 3. Szczegółowy Plan Implementacji (Dla Modelu LLM)
-
-### Faza 1: Warstwa nasłuchująca w Dart (Flutter)
-- `[TODO]` Utwórz `lib/services/native_intent_service.dart`.
-- `[TODO]` Zaimplementuj obsługę zdarzeń z wykorzystaniem `MethodChannel('com.ideaon.app/intents')` lub mechanizmu głębokich linków.
-- `[TODO]` Wepnij inicjalizację serwisu w `main.dart` (jako niezależny proces asynchroniczny) w taki sposób, aby błędy serwisu natywnego nie blokowały startu reszty aplikacji.
-
-### Faza 2: Implementacja iOS App Intents (Swift)
-- `[TODO]` Dodaj nowy target w profilu iOS (File -> New -> Target -> App Intents Extension).
-- `[TODO]` Zdefiniuj `CreateIdeaIntent` w języku Swift, implementując protokół `AppIntent`.
-- `[TODO]` Zaimplementuj metodę `perform()`, która użyje systemowego wywołania aby przekazać informację do głównej aplikacji ze schematem `ideaon://intent/new_idea`.
-- `[TODO]` Zapewnij lokalizację nazwy Intentu (widocznej w systemowej aplikacji "Skróty"), korzystając z mechanizmów natywnych iOS (String Catalogs).
-
-### Faza 3: Implementacja Android System Intents (XML/Kotlin)
-- `[TODO]` Zaktualizuj plik `android/app/src/main/res/xml/shortcuts.xml` o definicje intencji systemowych.
-- `[TODO]` Skonfiguruj `AndroidManifest.xml`, dodając odpowiedni `<intent-filter>` dla akcji tworzenia.
-- `[TODO]` Upewnij się, że wywołanie intentu na zamkniętej aplikacji poprawnie przekazuje parametr startowy przez `MainActivity` do Flutter Engine.
-
-### Faza 4: Routing i Testy (Bezpieczeństwo regresji)
-- `[TODO]` Podłącz odebrany intent w `native_intent_service.dart` do zaimplementowanego już widoku `CreateIdeaScreen`.
-- `[TODO]` Stwórz testy jednostkowe mockujące odbiór MethodChannel i sprawdzające czy routing wyzwala poprawną nawigację.
-- `[TODO]` Uruchom pełen zestaw testów regresyjnych, by potwierdzić, że wbudowane w poprzednich fazach funkcje nie uległy uszkodzeniu.
-
-## 4. Kryteria Akceptacji (AC)
-- [ ] Użytkownik iOS może otworzyć systemową aplikację "Skróty" (Shortcuts) i znaleźć natywną akcję "Dodaj pomysł".
-- [ ] Użytkownik może przypisać tę akcję do fizycznego "Action Button" lub gestu "Back Tap" w ustawieniach systemu operacyjnego.
-- [ ] Wywołanie akcji z poziomu systemu operacyjnego natychmiastowo otwiera aplikację na ekranie edytora.
-- [ ] Kod bazowy w katalogu `lib/` nie uległ modyfikacji naruszającej stabilność, wszystkie wcześniejsze testy przechodzą pomyślnie.
-
-Daj znać, jeśli skopiowanie tego formatu Ci odpowiada, czy mamy przejść do omawiania kolejnej funkcjonalności z roadmapy!
-
-jako następny punkt opisz w tym samym formacie wspominaną wcześniej funkcjonalność widżetu dostępnego na użądzenia mobilne
-Architekt MVP & Specyfikacji
-Niestandardowy Gem
-
-Przygotowałem dla Ciebie dokumentację kolejnej funkcjonalności – Interaktywne Widżety Ekranu Głównego.
-
-Plik został sformatowany dokładnie tak samo jak poprzednie, z zachowaniem instrukcji dla modelu i rygorów bezpieczeństwa (wzorzec oddzielnego serwisu, aby nie zablokować głównej bazy). Uwzględniłem w nim dwa rodzaje widżetów: "Inspirację Dnia" oraz "Szybką Akcję" (bezpośrednio nawiązującą do wcześniejszych ustaleń).
-
-Tutaj możesz pobrać wygenerowany plik Markdown:
-Ikona MD
- home_scree...idget_spec 
-MD
-
-Gdy go zweryfikujesz, daj znać, jaka funkcja będzie następna na naszej liście do rozpisania!
-
-pozostała na z poprzednich rozważań jeszcze jednak ważna funkcja, obsługa aplikacji samochodowych, fajnie jakby aplikacja była możliwa do uruchomienia podczas jazdy i zezwalała na dyktowanie pomysłów i zapisywała je, możliwe było uruchomienie jej koemndą głosową Hey Google dodaj pomysł, zastanów się co jeszcze było by tutaj użyteczne
-Architekt MVP & Specyfikacji
-Niestandardowy Gem
-
-Tryb samochodowy to doskonały pomysł. Biorąc pod uwagę specyfikę prowadzenia pojazdu, absolutnym priorytetem jest tutaj zasada "Eyes-Free & Hands-Free" (bez patrzenia na ekran i bez używania rąk).
-
-Zanim przejdziemy do specyfikacji, oto 3 dodatkowe pomysły, które świetnie sprawdzą się w tym kontekście:
-
-    Głosowe potwierdzenie zapisu (Text-To-Speech - TTS): Kiedy podyktujesz pomysł przez asystenta, aplikacja powinna odpowiedzieć na głos: "Zapisano pomysł. Czy chcesz dodać coś jeszcze?". Daje to pewność, że system zadziałał, bez konieczności zerkania na ekran.
-
-    Automatyczne Tagowanie "Z trasy": Każdy pomysł utworzony przez tryb samochodowy/głosowy powinien automatycznie dostawać specjalny znacznik lub kategorię (np. 🚗 Z auta). Podczas jazdy często dyktujemy chaotycznie – ten tag pomoże w późniejszym "sprzątaniu" notatek w domu.
-
-    Tryb "Uchwyt" (Drive Mode UI): Nie każdy ma w samochodzie ekran z Android Auto/Apple CarPlay. Jeśli użytkownik włączy aplikację na telefonie wpiętym w uchwyt, powinien móc aktywować tryb "Jazda", gdzie cały ekran zamienia się w jeden gigantyczny przycisk aktywujący mikrofon.
-
-Aby uniknąć problemów z pobieraniem plików, poniżej zamieszczam całą, gotową do skopiowania specyfikację w bloku kodu. Sformatowałem ją tak, aby model w Google Antigravity mógł bezbłędnie na niej pracować:
-Markdown
-
-# Specyfikacja Implementacyjna: Tryb Samochodowy i Obsługa Głosowa
-
-**Status Projektu:** Planowanie / Integracja Natywna i Głosowa
-**Nadrzędny Priorytet:** Pełne bezpieczeństwo kierowcy (Hands-Free). Brak konieczności odrywania wzroku od drogi. Model LLM **nie może zmieniać struktury tego pliku**.
-**Środowisko:** Google Antigravity (Flutter + Native App Actions/SiriKit)
-
-## 1. Cel Techniczny
-Umożliwienie błyskawicznego dyktowania pomysłów za pomocą komend asystentów głosowych ("Hey Google/Siri") oraz przygotowanie uproszczonego interfejsu dla systemów wewnątrzpojazdowych (Android Auto / Apple CarPlay) lub trybu "Uchwyt".
-
-## 2. Wymagania Funkcjonalne i Logika
-
-### 2.1. Integracja Asystenta Głosowego (Voice Intents)
-- **Komenda Wyzwalająca:** "Hej Google/Siri, dodaj notatkę [treść] w aplikacji Ideaon".
-- **Logika Przetwarzania:** - Aplikacja odbiera przekazany tekst bez uruchamiania pełnego interfejsu graficznego (praca w tle).
-  - Wykorzystanie serwisu zdefiniowanego wcześniej w `native_intent_service.dart`.
-  - Pusty tytuł (nadawany z autoinkrementacji SQLite), przekazany tekst ląduje w polu `description`.
-
-### 2.2. Automatyczna Kategoryzacja i Tagowanie
-- **Logika:** Zidentyfikowanie, że pomysł pochodzi z kanału "Automotive/Voice".
-- **Działanie:** System automatycznie przypisuje domyślną kategorię (np. "Głosowe" / "Z trasy" - pobieraną z i18n), aby ułatwić użytkownikowi późniejszą moderację tych (często chaotycznych) myśli.
-
-### 2.3. Potwierdzenie Głosowe (Text-to-Speech)
-- **Mechanizm:** Po udanym zapisie do `sqflite` poprzez komendę głosową, aplikacja musi wykorzystać mechanizm TTS (Text-to-Speech) do wygenerowania potwierdzenia audio.
-- **Komunikat:** Odtworzenie lokalizowanego komunikatu: np. "Pomysł zapisany".
-
-### 2.4. Uproszczony Interfejs Prowadzenia (Drive Mode UI)
-- Opcja wyświetlenia alternatywnego ekranu na telefonie (w przypadku braku CarPlay/Android Auto).
-- Ekran składa się w 80% z jednego, wielkiego przycisku mikrofonu o wysokim kontraście.
-- Użycie pakietów typu `flutter_carplay` (dla iOS) lub szablonów powiadomień Android Auto jako krok w przyszłości - na ten moment skupiamy się na sterowaniu w 100% głosem i widoku "Uchwyt".
-
-## 3. Standardy Jakości (Testy)
-- **Mockowanie Intentów:** Weryfikacja, czy payload tekstowy od Asystenta Google/Siri jest poprawnie parsowany na obiekt `Idea`.
-- **Zabezpieczenie przed Spamem:** Logika zapobiegająca tworzeniu wielu pustych notatek, gdy asystent źle usłyszy komendę.
-- **i18n:** Walidacja lokalizacji komunikatów zwrotnych TTS.
-
-## 4. Plan Developmentu (Do aktualizacji przez LLM)
-
-1. **Integracja z Google Assistant (Android App Actions)** - `[TODO]`
-   - Utworzenie pliku `shortcuts.xml` ze zdefiniowaną akcją `actions.intent.CREATE_THING` lub `Notes`.
-   - Skonfigurowanie mapowania parametrów intencji na warstwę Fluttera.
-   *Aktualizacja:*
-
-2. **Integracja z Siri (SiriKit / App Intents)** - `[TODO]`
-   - Rozszerzenie natywnego kodu Swift o obsługę `INCreateNoteIntent` w celu nasłuchiwania komend głosowych iOS.
-   - Przekazanie przetworzonego tekstu do Fluttera (Deep Link / MethodChannel).
-   *Aktualizacja:*
-
-3. **Implementacja Potwierdzeń Głosowych (TTS)** - `[TODO]`
-   - Dodanie pakietu `flutter_tts`.
-   - Wdrożenie serwisu `AudioFeedbackService` wywoływanego po udanym zapisie z kanału natywnego.
-   *Aktualizacja:*
-
-4. **Widok "Tryb Jazdy" (Drive Mode)** - `[TODO]`
-   - Utworzenie `DriveModeScreen` w aplikacji z maksymalnie uproszczonym UI.
-   - Włączenie blokady wygaszania ekranu (`wakelock`) podczas gdy ten tryb jest aktywny.
-   *Aktualizacja:*
-
-## 5. Kryteria Akceptacji (AC)
-- [ ] Użytkownik potrafi podyktować nową notatkę używając wyłącznie komendy "Hej Google/Siri", przy zablokowanym telefonie (zależnie od uprawnień OS).
-- [ ] Pomysły wygenerowane głosowo trafiają do bazy `sqflite` natychmiastowo.
-- [ ] Każdy pomysł z asystenta ma automatycznie przypisany odpowiedni tag/kategorię.
-- [ ] Aplikacja odpowiada komunikatem dźwiękowym (TTS) o sukcesie zapisu.
-- [ ] Zbudowany ekran "Drive Mode" nie wygasza się i posiada olbrzymi przycisk nagrywania ułatwiający trafienie bez patrzenia.
-
-Kopiując ten format wprost do Google Antigravity, będziesz mieć pewność, że model prawidłowo zaadresuje oddzielnie kwestię iOS (SiriKit) i Androida (App Actions).
-
-Czy jesteśmy gotowi na zdefiniowanie jakiejś mniejszej, pobocznej funkcji, czy zamykamy ten etap specyfikacji?
-
-przeanalizuj załączone błędy i znalezione usprawnienia podczas testów i przygotuj na to nowy plik dla modelu do wykonania zadania
-Architekt MVP & Specyfikacji
-Niestandardowy Gem
-
-To świetnie, że faza testów wyłapała te elementy. Zmiany wymuszone przez Androida 15 (Edge-to-Edge) to obecnie powszechny błąd przy aktualizacji SDK, z którym musimy się zmierzyć, aby aplikacja nie została odrzucona przez Google Play. Z kolei rozbudowa galerii obrazów idealnie wpisuje się w zapisane w HLD wymaganie biznesowe dotyczące "wielowymiarowości notatek" , a struktura zdefiniowana jako tablica plików (mediaUrls)  wreszcie zostanie w pełni wykorzystana.  
-
-Przygotowałem dla Ciebie nowy plik specyfikacji, sformatowany dokładnie w taki sposób, aby model w Google Antigravity mógł go odczytać jako listę zadań, z zachowaniem narzuconych reguł nieingerencji w strukturę dokumentu.
-Ikona MD
- android15_...llery_spec 
-MD
-
-Plik został wygenerowany pomyślnie. Tutaj możesz go pobrać:
-[file-tag: code-generated-file-0-1778949826318536853]
-
-Ponieważ w specyfikacji odnieśliśmy się do limitów wersji "Free" oraz "Pro" dla obrazów, a jak wspomniałeś w poprzednich plikach, aplikacja jest aktualnie odpięta od Firebase (które wcześniej kontrolowało ten stan), jak obecnie zarządzasz flagą bycia w wersji "Pro"? Czy planujesz wkrótce wdrożyć płatności (np. przez RevenueCat), czy na razie ma to być przełączane tylko ręcznie w ustawieniach developerskich dla celów testowych?
-
-aktualnie odpięlisię się od firebase ale aplikacja posiada wersję pro któe umożliwia dodanie więcej niz 10 pomysłów oraz wyrzuca reklamy, zrealizowana jest jako zakup jednorazowy w google
-Architekt MVP & Specyfikacji
-Niestandardowy Gem
-
-Zrozumiałem sytuację. Skoro Firebase jest obecnie odpięte , a status "Pro" (czyli plan Premium) zarządzany jest jako jednorazowy zakup (In-App Purchase) i zapisywany lokalnie przez AppPlan , model musi oprzeć walidację limitów zdjęć o lokalny stan aplikacji, najpewniej udostępniany przez Provider.  
-
-Zgodnie z Twoimi wytycznymi z pliku błędów, przygotowałem nową specyfikację dla modelu pracującego w Google Antigravity. Dokument uwzględnia wymogi Androida 15 (Edge-to-Edge) oraz nową logikę galerii bazującą na lokalnej bazie sqflite (czyli LocalIdeaRepository).  
-
-Oto gotowy plik MD do przekazania modelowi:
-Markdown
-
-# Specyfikacja Implementacyjna: Poprawki UI (Android 15) i Galeria Mediów
-
-**Status Projektu:** Bugfixing & Usprawnienia UX
-**Środowisko:** Google Antigravity (Flutter + Native Android)
-**Nadrzędna Zasada:** Model LLM **nie może zmieniać struktury tego pliku**. Dopuszczalna jest jedynie aktualizacja statusów zadań (`[TODO]` -> `[DONE]`) oraz dopisywanie krótkich aktualizacji bezpośrednio pod punktami. Ochrona istniejącego kodu, lokalnej bazy danych i testów to priorytet.
-
-## 1. Cel Techniczny
-1. Dostosowanie interfejsu aplikacji do wymogów Android 15 (Edge-to-Edge) oraz usunięcie wycofanych (deprecated) interfejsów API w warstwie natywnej.
-2. Zastąpienie pojedynczego obrazka pełnoprawnym systemem galerii w widoku szczegółów pomysłu z uwzględnieniem limitów dla planów subskrypcyjnych (Free vs Premium).
-
-## 2. Wymagania Funkcjonalne i Logika
-
-### 2.1. Kompatybilność z Android 15 (Edge-to-Edge)
-- **Logika Natywna (Android):** W wygenerowanym projekcie w pliku `MainActivity.kt` należy wywołać metodę `enableEdgeToEdge()` (wymaga odpowiednich importów z pakietu `androidx.activity`).
-- **Czyszczenie API:** Należy zidentyfikować i usunąć przestarzałe metody zarządzania oknem (np. flagi `systemUiVisibility`), które zostały wycofane w Android 15.
-- **Flutter UI (Safe Area):** Skoro aplikacja będzie rysowana na całym ekranie (pod paskiem powiadomień i nawigacji), należy upewnić się, że główne ekrany (np. `HomeScreen`, `IdeaDetailsScreen`) odpowiednio wykorzystują widżet `SafeArea` lub parametry `padding` w `Scaffold`, aby interfejs nie był ucięty.
-
-### 2.2. Zarządzanie Mediami (Galeria Pomysłu)
-- **Model Danych:** Modyfikacja modelu `Idea`. Należy zamienić ewentualne pojedyncze pole na ścieżkę do obrazka (np. `imagePath`) na listę: `List<String> mediaUrls`. Należy odpowiednio zaktualizować metody `toMap()` i `fromMap()` w modelu, serializując listę jako ciąg JSON.
-- **Aktualizacja Bazy Danych:** W `LocalIdeaRepository` (SQLite) należy obsłużyć nową strukturę (zapis i odczyt listy jako JSON w kolumnie bazy danych).
-- **Limity Planów (AppPlan):** - Wersja `Free`: Maksymalnie 3 obrazy na pomysł.
-  - Wersja `Premium` (zakup jednorazowy IAP): Maksymalnie 8 obrazów na pomysł.
-  - Ograniczenia te muszą być weryfikowane na podstawie aktualnego stanu `AppPlan`, np. poprzez stan aplikacji dostarczany przez `Provider`.
-- **Funkcje UI (IdeaDetailsScreen):**
-  - Wyświetlanie galerii (np. siatka lub karuzela zdjęć).
-  - Możliwość dodania nowego zdjęcia (przycisk "+" znikający po osiągnięciu limitu).
-  - Możliwość usunięcia konkretnego zdjęcia (ikona "X").
-  - Możliwość zmiany (podmiany) zdjęcia.
-
-## 3. Standardy Jakości (Testy)
-Każda nowa metoda i zmiana w logice biznesowej musi posiadać odpowiadający jej test jednostkowy.
-- **Testy Migracji DB:** Weryfikacja czy repozytorium poprawnie zapisuje i odczytuje listę URLi mediów z SQLite.
-- **Testy Limitów:** Sprawdzenie logiki blokującej możliwość dodania ponad 3 zdjęć dla użytkownika z planem `Free`.
-
-## 4. Plan Developmentu (Do aktualizacji przez LLM)
-
-1. **Poprawki Natywne (Android 15 Edge-to-Edge)** - `[TODO]`
-   - Aktualizacja `MainActivity.kt` o wywołanie `enableEdgeToEdge()`.
-   - Usunięcie `deprecated APIs` w warstwie Androida.
-   - Weryfikacja zastosowania `SafeArea` w widokach Fluttera.
-   *Aktualizacja:*
-
-2. **Migracja Modelu Danych i Repozytorium** - `[TODO]`
-   - Aktualizacja modelu `Idea` do obsługi `List<String> mediaUrls`.
-   - Zaktualizowanie logiki `LocalIdeaRepository` w tym procedury tworzenia/migracji tabeli (konwersja na JSON).
-   - `[TODO]` Napisanie testów jednostkowych zapisu i odczytu wielu obrazów.
-   *Aktualizacja:*
-
-3. **Rozbudowa UI Galerii i Integracja z AppPlan** - `[TODO]`
-   - Implementacja widżetu galerii w `IdeaDetailsScreen`.
-   - Wstrzyknięcie aktualnego `AppPlan` (Free/Premium) w celu walidacji limitu (3 lub 8 zdjęć).
-   - Implementacja logiki CRUD dla samych zdjęć (dodawanie przez pickera, usuwanie, podgląd).
-   *Aktualizacja:*
-
-## 5. Kryteria Akceptacji (AC)
-- [ ] Aplikacja buduje się dla Androida SDK 35 i poprawnie rozciąga się pod paskami nawigacji (Edge-to-Edge).
-- [ ] Żadne ważne elementy interfejsu Fluttera (przyciski, teksty) nie są przykryte przez wycięcia w ekranie smartfona.
-- [ ] Zwykły użytkownik (Plan Free) otrzymuje komunikat i blokadę możliwości wgrania więcej niż 3 zdjęć.
-- [ ] Użytkownik, który zakupił aplikację (Plan Premium), może dodać aż do 8 zdjęć.
-- [ ] Dodane zdjęcia trwale zachowują się w lokalnej bazie danych `sqflite` i poprawnie wyświetlają się po restarcie aplikacji.
-- [ ] Zmiany nie psują poprzednich funkcji (m.in. szybkiego dodawania notatek tekstowych i głosowych).
-
-czy możesz zaproponować najlepszą kolejność z priorytetami przygotowania tych funkcjonalności czy bugfixów o których rozmawaialiśmy
-Architekt MVP & Specyfikacji
-Niestandardowy Gem
-
-Jako Architekt i Analityk, przy układaniu roadmapy kieruję się dwiema głównymi zasadami: zarządzaniem ryzykiem (najpierw usuwamy blokery i modyfikujemy bazę danych) oraz logiką zależności (budujemy fundamenty, na których opierają się kolejne funkcje).
-
-Oto rekomendowana kolejność wdrożenia wraz z priorytetami, którą najlepiej przekazać modelowi lub zespołowi deweloperskiemu:
-Faza 1: Krytyczne poprawki i fundament danych (Priorytet: Bardzo Wysoki / Blocker)
-
-Zanim zaczniemy dodawać nowe drogi wejścia do aplikacji, musimy upewnić się, że to, co jest w środku, działa poprawnie i stabilnie, a schemat bazy danych jest ostateczny.
-
-    Poprawki UI - Android 15 Edge-to-Edge (Bugfix)
-
-        Dlaczego teraz: To jest bloker technologiczny. Aplikacja ucinająca interfejs lub wyrzucająca błędy kompilacji (deprecated APIs) na nowym systemie Android odstraszy użytkowników i może skutkować odrzuceniem w Google Play.
-
-    Galeria Mediów i Limity Premium (Core Enhancement)
-
-        Dlaczego teraz: Wymaga zmiany schematu bazy danych (SQLite) – z pojedynczego obrazka na tablicę mediaUrls. Takie zmiany (migracje DB) należy robić jak najszybciej, zanim zaimplementujemy nowe, złożone widoki czy skróty oparte na tym modelu. Poza tym, implementujemy tu logikę subskrypcji (AppPlan), co jest kluczowe dla biznesu.
-
-Faza 2: Błyskawiczne działanie i retencja (Priorytet: Wysoki)
-
-Mamy stabilny dom i nową bazę danych. Czas ułatwić użytkownikowi wrzucanie do niej pomysłów.
-
-    Speed-to-Thought: Zmiany w modelu i Quick Actions (Flutter Level)
-
-        Dlaczego teraz: Model musi nauczyć się radzić sobie z pustym polem "Tytuł" i obsługiwać szybkie dodawanie z poziomu ikony (Quick Actions). Ustawia to fundament pod routing (Deep Linki) dla wszystkich kolejnych integracji systemowych.
-
-Faza 3: Głęboka integracja systemowa (Priorytet: Średni)
-
-Skoro aplikacja potrafi już błyskawicznie przyjmować pomysły i radzi sobie z routingiem, wystawiamy ją na zewnątrz systemu operacyjnego (iOS/Android).
-
-    Natywne Skróty Systemowe (App Intents / Deep Link Bridge)
-
-        Dlaczego teraz: Wykorzystujemy przygotowany w Fazie 2 routing. Dodajemy kod natywny w Swift i Kotlin, co pozwala podpiąć aplikację pod fizyczny "Action Button" w iPhonie czy funkcję "Back Tap".
-
-    Interaktywne Widżety Ekranu Głównego
-
-        Dlaczego teraz: Widżety użyją tych samych Deep Linków, które napisaliśmy w punkcie 4. To "tanie" do wdrożenia na tym etapie, a drastycznie podnosi retencję (użytkownik widzi aplikację na pulpicie każdego dnia).
-
-Faza 4: "Wow Factor" i Nowe Konteksty (Priorytet: Niski / Opcjonalne dla MVP)
-
-Zostawiamy najtrudniejsze integracje (Voice, TTS) na koniec, gdy rdzeń aplikacji jest już w 100% stabilny.
-
-    Tryb Samochodowy i Obsługa Głosowa ("Eyes-Free")
-
-        Dlaczego na końcu: To bardzo skomplikowana funkcja integrująca natywnych asystentów (Hey Siri / Hey Google), syntezator mowy (TTS) oraz specjalny interfejs blokujący wygaszanie ekranu. Wymaga najwięcej testów i czasu, a jest używana tylko w specyficznym kontekście.
-
-Propozycja promptu operacyjnego dla środowiska Google Antigravity:
-
-Jeśli chcesz wrzucić tę roadmapę swojemu asystentowi (LLM), wystarczy mu napisać:
-
-    "Oto zaktualizowana roadmapa naszego projektu. Zaczynamy od Fazy 1. Przeczytaj dostarczony wcześniej plik android15_and_gallery_spec.md i rozpocznij pracę od zadania nr 1: Poprawki Android 15 Edge-to-Edge. Gdy skończysz Fazę 1, daj mi znać, a wgram pliki do Fazy 2."
-
-Czy taki układ ma dla Ciebie sens pod kątem biznesowym i zgadza się z Twoim procesem testowania?
-
-co do fazy: Faza 2: Błyskawiczne działanie i retencja (Priorytet: Wysoki)
-
-Mamy stabilny dom i nową bazę danych. Czas ułatwić użytkownikowi wrzucanie do niej pomysłów.
-
-
-Speed-to-Thought: Zmiany w modelu i Quick Actions (Flutter Level)
-
-Dlaczego teraz: Model musi nauczyć się radzić sobie z pustym polem "Tytuł" i obsługiwać szybkie dodawanie z poziomu ikony (Quick Actions). Ustawia to fundament pod routing (Deep Linki) dla wszystkich kolejnych integracji systemowych.
-
-
-co tutaj jest jeszcze nie zrobione?
-Architekt MVP & Specyfikacji
-Niestandardowy Gem
-
-Na podstawie wgranego przez Ciebie pliku feature_speed_to_thought_spec.md, okazuje się, że Faza 2 (na poziomie Fluttera) jest w zasadzie w całości ZAKOŃCZONA! Twój asystent/model zaktualizował ten plik i oznaczył wszystkie główne Kryteria Akceptacji jako zrealizowane ([x]).
-
-Oto co dokładnie zostało już zrobione z tej fazy:
-
-    Elastyczność tytułu: Użytkownik może zapisać pomysł z pustym tytułem (baza sqflite wstawia auto-tytuł).
-
-    Quick Actions: Działają skróty po przytrzymaniu ikony aplikacji (reagują na zmianę języka).
-
-    UX Edytora: Dodano trasę /new-idea oraz integrację z pakietem speech_to_text.
-
-Co zatem NIE JEST zrobione w tym module?
-
-W pliku znajduje się jeden punkt, który deweloper/model oznaczył jako [DEFERRED] (Odłożone na osobny sprint):
-
-    Punkt 4: Rejestracja App Intents * Treść notatki z pliku: "Odłożone na osobny sprint. Wymaga kodu natywnego Swift/Kotlin i konfiguracji platform channels. Quick Actions (punkt 2) zapewniają podstawowe skróty na ikonie — App Intents rozszerzą to o skróty systemowe."
-
-Co to oznacza dla naszej roadmapy?
-
-Oznacza to, że zrobiliście już cały fundament (Faza 2)! Ten nieukończony element (App Intents) to dokładnie to, co zaplanowaliśmy w naszej Fazie 3 (Głęboka integracja systemowa -> Natywne Skróty Systemowe).
-
-Wniosek:
-Nie mamy żadnych zaległości we Flutterowej warstwie "Speed-to-Thought". Możemy z czystym sumieniem przekazać modelowi w Google Antigravity plik android15_and_gallery_spec.md (czyli naszą nową Fazę 1 obejmującą poprawki Android 15 i rozbudowę galerii), a gdy to skończy, przejść płynnie do integracji natywnych (App Intents i Widżety).
-
-Czy zgadzasz się na taki plan działania?
-
-dodajemy nowy plik app-ads.txt zgodnie z instrukcją:
-
-
-
-
-Fantastycznie, to jest dokładnie to miejsce, którego szuka system reklamowy AdMob!
-
-Teraz, aby sfinalizować cały proces, upewnij się tylko, że wykonałeś ostatni krok:
-
-Zaloguj się do Google Play Console.
-
-Wybierz swoją aplikację.
-
-Przejdź do Zarządzanie obecnością w sklepie -> Ustawienia sklepu.
-
-W polu Strona internetowa wpisz adres: https://polychroma-bardimx.github.io (lub zachowaj swój poprzedni https://polychroma-bardimx.github.io/legal/ – dla robota Google to bez różnicy, i tak sprawdzi główną domenę).
-
-Zapisz zmiany w konsoli Play.
-
-Gotowe! 🎉 Robot indeksujący AdMob automatycznie sprawdza aplikacje pod kątem zmian w domenie. Zgodnie z instrukcją, ten proces może zająć do 24 godzin. Nie musisz nigdzie w AdMob wymuszać odświeżania – po prostu wróć tam jutro i sprawdź stan w zakładce app-ads.txt. Komunikat o błędzie powinien zniknąć.
-
-
-nie wiedzę takiego elemetnu w menu po wejściu w moją aplikację
-Architekt MVP & Specyfikacji
-Niestandardowy Gem
-
-Jasne, interfejs Google Play Console potrafi być mylący i często ulega zmianom, więc to menu mogło się trochę "schować" na liście! Często ludzie szukają tego w złym miejscu (np. tam, gdzie dodaje się screeny aplikacji).
-
-Oto dokładna, zaktualizowana ścieżka, gdzie to pole znajduje się obecnie:
-
-    Zaloguj się do Google Play Console i wybierz swoją aplikację.
-
-    W menu pionowym po lewej stronie zjedź w dół (może być konieczne użycie paska przewijania).
-
-    Poszukaj nagłówka Rozwój (lub Zwiększanie liczby użytkowników) i znajdź rozwijane menu Obecność w sklepie (Store presence).
-
-    Kliknij Ustawienia sklepu (Store settings).
-
-    Na głównym ekranie, który się otworzy, przewiń stronę w dół do sekcji o nazwie Dane kontaktowe w informacjach o aplikacji.
-
-    To właśnie tam znajduje się pole Strona internetowa.
-
-    Wklej w nie swój adres (https://polychroma-bardimx.github.io) i kliknij przycisk zapisu (zazwyczaj w prawym dolnym rogu).
-
-Mała podpowiedź: Uważaj, aby nie pomylić tej zakładki z zakładką Główny wpis w sklepie (tam, gdzie edytuje się nazwę, opis i zrzuty ekranu). Ustawienia sklepu to osobna pozycja w menu.
-
-Daj znać, czy udało Ci się to namierzyć!
-
-napisz prostą stronę html dla polychromy informcyjna - index html
-Architekt MVP & Specyfikacji
-Niestandardowy Gem
-
-Twój plik HTML dla strony głównej jest gotowy
-Ikona HTML
- index 
-HTML
-
-Przygotowałem czystą, profesjonalną i nowoczesną stronę index.html pod marką Polychroma, zaprojektowaną tak, aby wzbudzała zaufanie u recenzentów (np. Google Play i AdMob).
-
-Co znajduje się na stronie:
-
-    Elegancki i czytelny motyw (Clean Tech) wykorzystujący lokalny CSS.
-
-    Sekcja z flagowym produktem Ideaon, opisująca jego najważniejsze cechy (offline-first, bezpieczeństwo, AI).
-
-    Krótka sekcja "O nas", podkreślająca dbałość o prywatność i jakość aplikacji mobilnych.
-
-    Zgodnie z wymaganiami reklamowymi, w stopce oraz menu dodałem bezpośrednie linki do Polityki prywatności (/legal/) oraz referencję do app-ads.txt.
-
-Plik ten możesz bezpośrednio wrzucić do swojego repozytorium na GitHubie (na gałąź podpiętą pod GitHub Pages). Gdy tylko się zaktualizuje, Twoja domena polychroma-bardimx.github.io będzie wyglądać jak pełnoprawna strona dewelopera.
-
-
-Gemini to AI i może popełniać błędy, także co do ludzi. Twoja prywatność i GeminiOtwiera się w nowym oknie
-
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -518,7 +32,7 @@ Gemini to AI i może popełniać błędy, także co do ludzi. Twoja prywatność
         header {
             background-color: var(--card-bg);
             border-bottom: 1px solid var(--border-color);
-            padding: 1.5rem 2rem;
+            padding: 1rem 2rem;
             position: sticky;
             top: 0;
             z-index: 100;
@@ -544,10 +58,15 @@ Gemini to AI i może popełniać błędy, także co do ludzi. Twoja prywatność
             color: var(--primary-color);
         }
 
+        .nav-container {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
         nav a {
             color: var(--muted-text);
             text-decoration: none;
-            margin-left: 1.5rem;
             font-size: 0.95rem;
             font-weight: 500;
             transition: color 0.2s;
@@ -555,6 +74,42 @@ Gemini to AI i może popełniać błędy, także co do ludzi. Twoja prywatność
 
         nav a:hover {
             color: var(--primary-color);
+        }
+
+        /* Language Selector Styles */
+        .lang-selector-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        .lang-select {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 0.4rem 1.8rem 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        }
+
+        .lang-selector-wrapper::after {
+            content: "▼";
+            font-size: 0.6rem;
+            color: var(--muted-text);
+            position: absolute;
+            right: 0.6rem;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+
+        .lang-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
         }
 
         .main-container {
@@ -684,12 +239,15 @@ Gemini to AI i może popełniać błędy, także co do ludzi. Twoja prywatność
 
         .footer-links {
             margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
         }
 
         .footer-links a {
             color: var(--muted-text);
             text-decoration: none;
-            margin: 0 1rem;
             transition: color 0.2s;
         }
 
@@ -697,7 +255,29 @@ Gemini to AI i może popełniać błędy, także co do ludzi. Twoja prywatność
             color: var(--primary-color);
         }
 
+        /* Multi-language Visibility Rules */
+        [data-i18n] {
+            display: none;
+        }
+
+        body[data-lang="pl"] [data-i18n="pl"] { display: block; }
+        body[data-lang="en"] [data-i18n="en"] { display: block; }
+        body[data-lang="de"] [data-i18n="de"] { display: block; }
+        body[data-lang="es"] [data-i18n="es"] { display: block; }
+        body[data-lang="zh"] [data-i18n="zh"] { display: block; }
+
+        /* Inline blocks visibility override */
+        body[data-lang="pl"] span[data-i18n="pl"], body[data-lang="pl"] a[data-i18n="pl"] { display: inline-block; }
+        body[data-lang="en"] span[data-i18n="en"], body[data-lang="en"] a[data-i18n="en"] { display: inline-block; }
+        body[data-lang="de"] span[data-i18n="de"], body[data-lang="de"] a[data-i18n="de"] { display: inline-block; }
+        body[data-lang="es"] span[data-i18n="es"], body[data-lang="es"] a[data-i18n="es"] { display: inline-block; }
+        body[data-lang="zh"] span[data-i18n="zh"], body[data-lang="zh"] a[data-i18n="zh"] { display: inline-block; }
+
         @media (max-width: 640px) {
+            .header-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
             .hero h1 {
                 font-size: 2.25rem;
             }
@@ -707,56 +287,255 @@ Gemini to AI i może popełniać błędy, także co do ludzi. Twoja prywatność
         }
     </style>
 </head>
-<body>
+<body data-lang="pl">
 
     <header>
         <div class="header-container">
             <a href="#" class="logo">Poly<span>chroma</span></a>
-            <nav>
-                <a href="#products">Projekty</a>
-                <a href="#about">O nas</a>
-                <a href="/legal/">Polityka Prywatności</a>
-            </nav>
+            <div class="nav-container">
+                <nav>
+                    <!-- PL Links -->
+                    <a href="#products" data-i18n="pl">Projekty</a>
+                    <a href="#about" data-i18n="pl" style="margin-left: 1rem;">O nas</a>
+                    <a href="/legal/" data-i18n="pl" style="margin-left: 1rem;">Prywatność</a>
+                    
+                    <!-- EN Links -->
+                    <a href="#products" data-i18n="en">Projects</a>
+                    <a href="#about" data-i18n="en" style="margin-left: 1rem;">About</a>
+                    <a href="/legal/" data-i18n="en" style="margin-left: 1rem;">Privacy</a>
+
+                    <!-- DE Links -->
+                    <a href="#products" data-i18n="de">Projekte</a>
+                    <a href="#about" data-i18n="de" style="margin-left: 1rem;">Über uns</a>
+                    <a href="/legal/" data-i18n="de" style="margin-left: 1rem;">Datenschutz</a>
+
+                    <!-- ES Links -->
+                    <a href="#products" data-i18n="es">Proyectos</a>
+                    <a href="#about" data-i18n="es" style="margin-left: 1rem;">Nosotros</a>
+                    <a href="/legal/" data-i18n="es" style="margin-left: 1rem;">Privacidad</a>
+
+                    <!-- ZH Links -->
+                    <a href="#products" data-i18n="zh">项目</a>
+                    <a href="#about" data-i18n="zh" style="margin-left: 1rem;">关于我们</a>
+                    <a href="/legal/" data-i18n="zh" style="margin-left: 1rem;">隐私政策</a>
+                </nav>
+                
+                <div class="lang-selector-wrapper">
+                    <select class="lang-select" id="langSelect" onchange="changeLanguage(this.value)">
+                        <option value="pl">Polski</option>
+                        <option value="en">English</option>
+                        <option value="de">Deutsch</option>
+                        <option value="es">Español</option>
+                        <option value="zh">中文</option>
+                    </select>
+                </div>
+            </div>
         </div>
     </header>
 
     <div class="main-container">
+        <!-- HERO SECTION -->
         <section class="hero">
-            <h1>Tworzymy użyteczne aplikacje mobilne.</h1>
-            <p>Skupiamy się na prywatności, szybkości działania i intuicyjnym designie. Poznaj nasze najnowsze rozwiązania technologiczne.</p>
-        </section>
-
-        <section id="products" class="products-grid">
-            <h2 class="section-title">Nasze Aplikacje</h2>
-            <div class="product-card">
-                <span class="product-badge">Flagowy Projekt</span>
-                <h3>Ideaon</h3>
-                <p>Twój osobisty asystent zarządzania pomysłami i kreatywnością, zaprojektowany w architekturze offline-first. Pozwala na bezpieczne gromadzenie i strukturyzowanie myśli bez konieczności stałego połączenia z siecią.</p>
-                <ul class="product-features">
-                    <li>Szybkie wprowadzanie myśli (Speed-to-Thought)</li>
-                    <li>Lokalna i bezpieczna baza danych SQLite</li>
-                    <li>Zaawansowane notatki głosowe i dyktowanie</li>
-                    <li>Wsparcie analizy kreatywnej przy użyciu AI (Gemini)</li>
-                </ul>
+            <div data-i18n="pl">
+                <h1>Tworzymy użyteczne aplikacje mobilne.</h1>
+                <p>Skupiamy się na prywatności, szybkości działania i intuicyjnym designie. Poznaj nasze najnowsze rozwiązania technologiczne.</p>
+            </div>
+            <div data-i18n="en">
+                <h1>We build useful mobile applications.</h1>
+                <p>We focus on privacy, high performance, and intuitive design. Discover our latest technological solutions.</p>
+            </div>
+            <div data-i18n="de">
+                <h1>Wir entwickeln nützliche mobile Apps.</h1>
+                <p>Unser Fokus liegt auf Datenschutz, hoher Performance und intuitivem Design. Entdecken Sie unsere neuesten technologischen Lösungen.</p>
+            </div>
+            <div data-i18n="es">
+                <h1>Creamos aplicaciones móviles útiles.</h1>
+                <p>Nos enfocamos en la privacidad, el alto rendimiento y el diseño intuitivo. Descubre nuestras últimas soluciones tecnológicas.</p>
+            </div>
+            <div data-i18n="zh">
+                <h1>我们打造实用的移动应用程序。</h1>
+                <p>专注于隐私保护、高效性能与直观设计。探索我们最新的技术解决方案。</p>
             </div>
         </section>
 
+        <!-- PRODUCTS SECTION -->
+        <section id="products" class="products-grid">
+            <h2 class="section-title">
+                <span data-i18n="pl">Nasze Aplikacje</span>
+                <span data-i18n="en">Our Applications</span>
+                <span data-i18n="de">Unsere Anwendungen</span>
+                <span data-i18n="es">Nuestras Aplicaciones</span>
+                <span data-i18n="zh">我们的应用程序</span>
+            </h2>
+            
+            <div class="product-card">
+                <span class="product-badge">
+                    <span data-i18n="pl">Flagowy Projekt</span>
+                    <span data-i18n="en">Flagship Project</span>
+                    <span data-i18n="de">Flaggschiff-Projekt</span>
+                    <span data-i18n="es">Proyecto Principal</span>
+                    <span data-i18n="zh">旗舰项目</span>
+                </span>
+                <h3>Ideaon</h3>
+                
+                <!-- PL Product Description -->
+                <div data-i18n="pl">
+                    <p>Twój osobisty asystent zarządzania pomysłami i kreatywnością, zaprojektowany w architekturze offline-first. Pozwala na bezpieczne gromadzenie i strukturyzowanie myśli bez konieczności stałego połączenia z siecią.</p>
+                    <ul class="product-features">
+                        <li>Szybkie wprowadzanie myśli (Speed-to-Thought)</li>
+                        <li>Lokalna i bezpieczna baza danych SQLite</li>
+                        <li>Zaawansowane notatki głosowe i dyktowanie</li>
+                        <li>Wsparcie analizy kreatywnej przy użyciu AI (Gemini)</li>
+                    </ul>
+                </div>
+
+                <!-- EN Product Description -->
+                <div data-i18n="en">
+                    <p>Your personal assistant for idea management and creativity, designed with an offline-first architecture. It allows you to safely gather and structure your thoughts without needing a constant internet connection.</p>
+                    <ul class="product-features">
+                        <li>Instant thought capturing (Speed-to-Thought)</li>
+                        <li>Secure local SQLite database</li>
+                        <li>Advanced voice notes and dictation features</li>
+                        <li>Creative analysis support powered by AI (Gemini)</li>
+                    </ul>
+                </div>
+
+                <!-- DE Product Description -->
+                <div data-i18n="de">
+                    <p>Ihr persönlicher Assistent für Ideenmanagement und Kreativität, entwickelt mit einer Offline-First-Architektur. Er ermöglicht es Ihnen, Ihre Gedanken sicher zu sammeln und zu strukturieren, ohne eine ständige Internetverbindung zu benötigen.</p>
+                    <ul class="product-features">
+                        <li>Blitzschnelle Ideenerfassung (Speed-to-Thought)</li>
+                        <li>Sichere lokale SQLite-Datenbank</li>
+                        <li>Fortschrittliche Sprachnotizen und Diktierfunktionen</li>
+                        <li>Kreative Analyseunterstützung powered by AI (Gemini)</li>
+                    </ul>
+                </div>
+
+                <!-- ES Product Description -->
+                <div data-i18n="es">
+                    <p>Tu asistente personal para la gestión de ideas y la creatividad, diseñado con una arquitectura offline-first. Te permite recopilar y estructurar tus pensamientos de forma segura sin necesidad de una conexión constante a Internet.</p>
+                    <ul class="product-features">
+                        <li>Captura instantánea de pensamientos (Speed-to-Thought)</li>
+                        <li>Base de datos local segura SQLite</li>
+                        <li>Notas de voz avanzadas y funciones de dictado</li>
+                        <li>Soporte de análisis creativo potenciado por IA (Gemini)</li>
+                    </ul>
+                </div>
+
+                <!-- ZH Product Description -->
+                <div data-i18n="zh">
+                    <p>您的个人想法管理与创意助手，专为离线优先（offline-first）架构设计。无需持续的互联网连接，即可安全地收集和结构化您的灵感与想法。</p>
+                    <ul class="product-features">
+                        <li>闪电般快速的想法录入 (Speed-to-Thought)</li>
+                        <li>安全可靠的本地 SQLite 数据库</li>
+                        <li>高级语音笔记与语音听写功能</li>
+                        <li>基于人工智能 (Gemini) 的创意分析支持</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ABOUT SECTION -->
         <section id="about" class="about-section">
-            <h2 class="section-title">O Polychroma</h2>
-            <p>Polychroma to niezależne studio deweloperskie ukierunkowane na inżynierię oprogramowania mobilnego. Wierzymy, że najlepsze narzędzia to te, które nie rozpraszają użytkownika, działają natychmiastowo i szanują prywatność danych.</p>
-            <p>Nasze aplikacje są tworzone z myślą o platformie Android oraz iOS, łącząc nowoczesne podejście do UX z niezawodną architekturzą systemową.</p>
+            <h2 class="section-title">
+                <span data-i18n="pl">O Polychroma</span>
+                <span data-i18n="en">About Polychroma</span>
+                <span data-i18n="de">Über Polychroma</span>
+                <span data-i18n="es">Sobre Polychroma</span>
+                <span data-i18n="zh">关于 Polychroma</span>
+            </h2>
+            
+            <div data-i18n="pl">
+                <p>Polychroma to niezależne studio deweloperskie ukierunkowane na inżynierię oprogramowania mobilnego. Wierzymy, że najlepsze narzędzia to te, które nie rozpraszają użytkownika, działają natychmiastowo i szanują prywatność danych.</p>
+                <p>Nasze aplikacje są tworzone z myślą o platformach Android oraz iOS, łącząc nowoczesne podejście do UX z niezawodną architekturzą systemową.</p>
+            </div>
+            <div data-i18n="en">
+                <p>Polychroma is an independent development studio focused on mobile software engineering. We believe that the best tools are those that don't distract the user, work instantly, and completely respect data privacy.</p>
+                <p>Our applications are built from the ground up for Android and iOS platforms, combining a modern approach to UX with reliable system architecture.</p>
+            </div>
+            <div data-i18n="de">
+                <p>Polychroma ist ein unabhängiges Entwicklungsstudio, das sich auf die Entwicklung mobiler Software konzentriert. Wir glauben, dass die besten Werkzeuge diejenigen sind, die den Benutzer nicht ablenken, sofort funktionieren und den Datenschutz voll und ganz respektieren.</p>
+                <p>Unsere Anwendungen wurden von Grund auf für Android- und iOS-Plattformen entwickelt und kombinieren einen modernen UX-Ansatz mit einer zuverlässigen Systemarchitektur.</p>
+            </div>
+            <div data-i18n="es">
+                <p>Polychroma es un estudio de desarrollo independiente centrado en la ingeniería de software móvil. Creemos que las mejores herramientas son aquellas que no distraen al usuario, funcionan al instante y respetan plenamente la privacidad de los datos.</p>
+                <p>Nuestras aplicaciones están creadas desde cero para las plataformas Android e iOS, combinando un enfoque moderno de UX con una arquitectura de sistema confiable.</p>
+            </div>
+            <div data-i18n="zh">
+                <p>Polychroma 是一家专注于移动软件工程 e的独立开发工作室。我们相信，最好的工具是那些不分散用户注意力、即时响应并完全尊重数据隐私 e的工具。</p>
+                <p>我们的应用程序针对 Android 和 iOS 平台精心打造，将现代 UX 方法与可靠的系统架构完美融合。</p>
+            </div>
         </section>
     </div>
 
     <footer>
         <div class="footer-links">
-            <a href="#products">Aplikacje</a>
-            <a href="#about">O nas</a>
-            <a href="/legal/">Polityka Prywatności (Privacy Policy)</a>
+            <a href="#products">
+                <span data-i18n="pl">Aplikacje</span>
+                <span data-i18n="en">Applications</span>
+                <span data-i18n="de">Anwendungen</span>
+                <span data-i18n="es">Aplicaciones</span>
+                <span data-i18n="zh">应用服务</span>
+            </a>
+            <a href="#about">
+                <span data-i18n="pl">O nas</span>
+                <span data-i18n="en">About us</span>
+                <span data-i18n="de">Über uns</span>
+                <span data-i18n="es">Nosotros</span>
+                <span data-i18n="zh">关于我们</span>
+            </a>
+            <a href="/legal/">
+                <span data-i18n="pl">Polityka Prywatności</span>
+                <span data-i18n="en">Privacy Policy</span>
+                <span data-i18n="de">Datenschutzerklärung</span>
+                <span data-i18n="es">Política de Privacidad</span>
+                <span data-i18n="zh">隐私政策</span>
+            </a>
             <a href="/app-ads.txt">app-ads.txt</a>
         </div>
-        <p>&copy; 2026 Polychroma. Wszelkie prawa zastrzeżone.</p>
+        <p>&copy; 2026 Polychroma. <span data-i18n="pl">Wszelkie prawa zastrzeżone.</span><span data-i18n="en">All rights reserved.</span><span data-i18n="de">Alle Rechte vorbehalten.</span><span data-i18n="es">Todos los derechos reservados.</span><span data-i18n="zh">保留所有权利。</span></p>
     </footer>
 
+    <script>
+        const supportedLanguages = ['pl', 'en', 'de', 'es', 'zh'];
+        const defaultLanguage = 'en';
+
+        function changeLanguage(lang) {
+            if (!supportedLanguages.includes(lang)) lang = defaultLanguage;
+            
+            document.body.setAttribute('data-lang', lang);
+            document.getElementById('langSelect').value = lang;
+            
+            // Update document title dynamically based on language
+            const titles = {
+                pl: "Polychroma - Studio Aplikacji Mobilnych",
+                en: "Polychroma - Mobile Apps Studio",
+                de: "Polychroma - Studio für mobile Apps",
+                es: "Polychroma - Estudio de Aplicaciones Móviles",
+                zh: "Polychroma - 移动应用工作室"
+            };
+            document.title = titles[lang] || titles[defaultLanguage];
+            
+            // Save preference
+            localStorage.setItem('polychroma_pref_lang', lang);
+        }
+
+        // Auto-detect browser language or load saved preference
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedLang = localStorage.getItem('polychroma_pref_lang');
+            if (savedLang && supportedLanguages.includes(savedLang)) {
+                changeLanguage(savedLang);
+            } else {
+                const browserLang = navigator.language || navigator.userLanguage;
+                const shortLang = browserLang.split('-')[0];
+                
+                if (supportedLanguages.includes(shortLang)) {
+                    changeLanguage(shortLang);
+                } else {
+                    changeLanguage(defaultLanguage);
+                }
+            }
+         Wielojęzyczność });
+    </script>
 </body>
 </html>

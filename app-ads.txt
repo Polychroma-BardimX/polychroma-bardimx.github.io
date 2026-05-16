@@ -1,0 +1,3 @@
+# app-ads.txt
+# This file contains app advertising platform declarations
+# For more information about app-ads.txt, visit: https://iabtechlab.com/ads-txt-pl/

@@ -76,7 +76,6 @@
             color: var(--primary-color);
         }
 
-        /* Language Selector Styles */
         .lang-selector-wrapper {
             position: relative;
             display: inline-block;
@@ -160,6 +159,9 @@
 
         .products-grid {
             margin-bottom: 5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
         }
 
         .product-card {
@@ -182,6 +184,11 @@
             text-transform: uppercase;
             letter-spacing: 0.05em;
         }
+        
+        .product-badge.secondary {
+            background-color: #f1f5f9;
+            color: #475569;
+        }
 
         .product-card h3 {
             font-size: 1.5rem;
@@ -196,7 +203,7 @@
 
         .product-features {
             list-style: none;
-            margin-bottom: 2rem;
+            margin-bottom: 1rem;
         }
 
         .product-features li {
@@ -237,25 +244,37 @@
             font-size: 0.9rem;
         }
 
-        .footer-links {
-            margin-bottom: 1.5rem;
+        .footer-nav {
+            margin-bottom: 2rem;
             display: flex;
             justify-content: center;
             flex-wrap: wrap;
-            gap: 1.5rem;
+            gap: 3rem;
         }
 
-        .footer-links a {
+        .footer-col {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            text-align: left;
+        }
+
+        .footer-col h4 {
+            color: var(--text-color);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-col a {
             color: var(--muted-text);
             text-decoration: none;
             transition: color 0.2s;
         }
 
-        .footer-links a:hover {
+        .footer-col a:hover {
             color: var(--primary-color);
         }
 
-        /* Multi-language Visibility Rules */
         [data-i18n] {
             display: none;
         }
@@ -266,7 +285,6 @@
         body[data-lang="es"] [data-i18n="es"] { display: block; }
         body[data-lang="zh"] [data-i18n="zh"] { display: block; }
 
-        /* Inline blocks visibility override */
         body[data-lang="pl"] span[data-i18n="pl"], body[data-lang="pl"] a[data-i18n="pl"] { display: inline-block; }
         body[data-lang="en"] span[data-i18n="en"], body[data-lang="en"] a[data-i18n="en"] { display: inline-block; }
         body[data-lang="de"] span[data-i18n="de"], body[data-lang="de"] a[data-i18n="de"] { display: inline-block; }
@@ -284,6 +302,15 @@
             .product-card, .about-section {
                 padding: 1.5rem;
             }
+            .footer-nav {
+                flex-direction: column;
+                gap: 1.5rem;
+                align-items: center;
+                text-align: center;
+            }
+            .footer-col {
+                text-align: center;
+            }
         }
     </style>
 </head>
@@ -294,30 +321,20 @@
             <a href="#" class="logo">Poly<span>chroma</span></a>
             <div class="nav-container">
                 <nav>
-                    <!-- PL Links -->
                     <a href="#products" data-i18n="pl">Projekty</a>
                     <a href="#about" data-i18n="pl" style="margin-left: 1rem;">O nas</a>
-                    <a href="/legal/" data-i18n="pl" style="margin-left: 1rem;">Prywatność</a>
                     
-                    <!-- EN Links -->
                     <a href="#products" data-i18n="en">Projects</a>
                     <a href="#about" data-i18n="en" style="margin-left: 1rem;">About</a>
-                    <a href="/legal/" data-i18n="en" style="margin-left: 1rem;">Privacy</a>
 
-                    <!-- DE Links -->
                     <a href="#products" data-i18n="de">Projekte</a>
                     <a href="#about" data-i18n="de" style="margin-left: 1rem;">Über uns</a>
-                    <a href="/legal/" data-i18n="de" style="margin-left: 1rem;">Datenschutz</a>
 
-                    <!-- ES Links -->
                     <a href="#products" data-i18n="es">Proyectos</a>
                     <a href="#about" data-i18n="es" style="margin-left: 1rem;">Nosotros</a>
-                    <a href="/legal/" data-i18n="es" style="margin-left: 1rem;">Privacidad</a>
 
-                    <!-- ZH Links -->
                     <a href="#products" data-i18n="zh">项目</a>
                     <a href="#about" data-i18n="zh" style="margin-left: 1rem;">关于我们</a>
-                    <a href="/legal/" data-i18n="zh" style="margin-left: 1rem;">隐私政策</a>
                 </nav>
                 
                 <div class="lang-selector-wrapper">
@@ -334,7 +351,6 @@
     </header>
 
     <div class="main-container">
-        <!-- HERO SECTION -->
         <section class="hero">
             <div data-i18n="pl">
                 <h1>Tworzymy użyteczne aplikacje mobilne.</h1>
@@ -358,7 +374,6 @@
             </div>
         </section>
 
-        <!-- PRODUCTS SECTION -->
         <section id="products" class="products-grid">
             <h2 class="section-title">
                 <span data-i18n="pl">Nasze Aplikacje</span>
@@ -378,7 +393,6 @@
                 </span>
                 <h3>Ideaon</h3>
                 
-                <!-- PL Product Description -->
                 <div data-i18n="pl">
                     <p>Twój osobisty asystent zarządzania pomysłami i kreatywnością, zaprojektowany w architekturze offline-first. Pozwala na bezpieczne gromadzenie i strukturyzowanie myśli bez konieczności stałego połączenia z siecią.</p>
                     <ul class="product-features">
@@ -388,8 +402,6 @@
                         <li>Wsparcie analizy kreatywnej przy użyciu AI (Gemini)</li>
                     </ul>
                 </div>
-
-                <!-- EN Product Description -->
                 <div data-i18n="en">
                     <p>Your personal assistant for idea management and creativity, designed with an offline-first architecture. It allows you to safely gather and structure your thoughts without needing a constant internet connection.</p>
                     <ul class="product-features">
@@ -399,8 +411,6 @@
                         <li>Creative analysis support powered by AI (Gemini)</li>
                     </ul>
                 </div>
-
-                <!-- DE Product Description -->
                 <div data-i18n="de">
                     <p>Ihr persönlicher Assistent für Ideenmanagement und Kreativität, entwickelt mit einer Offline-First-Architektur. Er ermöglicht es Ihnen, Ihre Gedanken sicher zu sammeln und zu strukturieren, ohne eine ständige Internetverbindung zu benötigen.</p>
                     <ul class="product-features">
@@ -410,8 +420,6 @@
                         <li>Kreative Analyseunterstützung powered by AI (Gemini)</li>
                     </ul>
                 </div>
-
-                <!-- ES Product Description -->
                 <div data-i18n="es">
                     <p>Tu asistente personal para la gestión de ideas y la creatividad, diseñado con una arquitectura offline-first. Te permite recopilar y estructurar tus pensamientos de forma segura sin necesidad de una conexión constante a Internet.</p>
                     <ul class="product-features">
@@ -421,8 +429,6 @@
                         <li>Soporte de análisis creativo potenciado por IA (Gemini)</li>
                     </ul>
                 </div>
-
-                <!-- ZH Product Description -->
                 <div data-i18n="zh">
                     <p>您的个人想法管理与创意助手，专为离线优先（offline-first）架构设计。无需持续的互联网连接，即可安全地收集和结构化您的灵感与想法。</p>
                     <ul class="product-features">
@@ -433,9 +439,65 @@
                     </ul>
                 </div>
             </div>
+
+            <div class="product-card">
+                <span class="product-badge secondary">
+                    <span data-i18n="pl">Nowość</span>
+                    <span data-i18n="en">New Arrival</span>
+                    <span data-i18n="de">Neuheit</span>
+                    <span data-i18n="es">Novedad</span>
+                    <span data-i18n="zh">新品发布</span>
+                </span>
+                <h3>KindHabit</h3>
+                
+                <div data-i18n="pl">
+                    <p>Prosty i uważny tracker nawyków. Buduj pozytywne rutyny bez presji i poczucia winy. Aplikacja skupia się na pozytywnym wzmacnianiu i zachowuje wszystkie Twoje dane wyłącznie na urządzeniu.</p>
+                    <ul class="product-features">
+                        <li>Minimalistyczny interfejs bez rozpraszaczy</li>
+                        <li>Tryb offline-first i pełna prywatność</li>
+                        <li>Elastyczne cele i łagodne przypomnienia</li>
+                        <li>Szczegółowe, ale pozbawione stresu statystyki</li>
+                    </ul>
+                </div>
+                <div data-i18n="en">
+                    <p>A simple and mindful habit tracker. Build positive routines without pressure or guilt. The app focuses on positive reinforcement and keeps all your data strictly on your device.</p>
+                    <ul class="product-features">
+                        <li>Minimalist, distraction-free interface</li>
+                        <li>Offline-first mode and total privacy</li>
+                        <li>Flexible goals and gentle reminders</li>
+                        <li>Detailed yet stress-free statistics</li>
+                    </ul>
+                </div>
+                <div data-i18n="de">
+                    <p>Ein einfacher und achtsamer Gewohnheits-Tracker. Bauen Sie positive Routinen ohne Druck oder Schuldgefühle auf. Die App konzentriert sich auf positive Bestärkung und speichert alle Daten nur auf Ihrem Gerät.</p>
+                    <ul class="product-features">
+                        <li>Minimalistische, ablenkungsfreie Benutzeroberfläche</li>
+                        <li>Offline-First-Modus und absolute Privatsphäre</li>
+                        <li>Flexible Ziele und sanfte Erinnerungen</li>
+                        <li>Detaillierte, aber stressfreie Statistiken</li>
+                    </ul>
+                </div>
+                <div data-i18n="es">
+                    <p>Un rastreador de hábitos simple y consciente. Construye rutinas positivas sin presión ni culpa. La aplicación se centra en el refuerzo positivo y mantiene todos tus datos estrictamente en tu dispositivo.</p>
+                    <ul class="product-features">
+                        <li>Interfaz minimalista y sin distracciones</li>
+                        <li>Modo offline-first y privacidad total</li>
+                        <li>Metas flexibles y recordatorios suaves</li>
+                        <li>Estadísticas detalladas pero sin estrés</li>
+                    </ul>
+                </div>
+                <div data-i18n="zh">
+                    <p>一个简单且专注的习惯追踪器。在没有压力或负罪感的情况下建立积极的日常习惯。该应用程序专注于积极强化，并将您的所有数据严格保存在您的设备上。</p>
+                    <ul class="product-features">
+                        <li>极简无干扰的界面</li>
+                        <li>离线优先模式与全面的隐私保护</li>
+                        <li>灵活的目标与温和的提醒</li>
+                        <li>详细但无压力的统计数据</li>
+                    </ul>
+                </div>
+            </div>
         </section>
 
-        <!-- ABOUT SECTION -->
         <section id="about" class="about-section">
             <h2 class="section-title">
                 <span data-i18n="pl">O Polychroma</span>
@@ -447,7 +509,7 @@
             
             <div data-i18n="pl">
                 <p>Polychroma to niezależne studio deweloperskie ukierunkowane na inżynierię oprogramowania mobilnego. Wierzymy, że najlepsze narzędzia to te, które nie rozpraszają użytkownika, działają natychmiastowo i szanują prywatność danych.</p>
-                <p>Nasze aplikacje są tworzone z myślą o platformach Android oraz iOS, łącząc nowoczesne podejście do UX z niezawodną architekturzą systemową.</p>
+                <p>Nasze aplikacje są tworzone z myślą o platformach Android oraz iOS, łącząc nowoczesne podejście do UX z niezawodną architekturą systemową.</p>
             </div>
             <div data-i18n="en">
                 <p>Polychroma is an independent development studio focused on mobile software engineering. We believe that the best tools are those that don't distract the user, work instantly, and completely respect data privacy.</p>
@@ -462,36 +524,36 @@
                 <p>Nuestras aplicaciones están creadas desde cero para las plataformas Android e iOS, combinando un enfoque moderno de UX con una arquitectura de sistema confiable.</p>
             </div>
             <div data-i18n="zh">
-                <p>Polychroma 是一家专注于移动软件工程 e的独立开发工作室。我们相信，最好的工具是那些不分散用户注意力、即时响应并完全尊重数据隐私 e的工具。</p>
+                <p>Polychroma 是一家专注于移动软件工程的独立开发工作室。我们相信，最好的工具是那些不分散用户注意力、即时响应并完全尊重数据隐私的工具。</p>
                 <p>我们的应用程序针对 Android 和 iOS 平台精心打造，将现代 UX 方法与可靠的系统架构完美融合。</p>
             </div>
         </section>
     </div>
 
     <footer>
-        <div class="footer-links">
-            <a href="#products">
-                <span data-i18n="pl">Aplikacje</span>
-                <span data-i18n="en">Applications</span>
-                <span data-i18n="de">Anwendungen</span>
-                <span data-i18n="es">Aplicaciones</span>
-                <span data-i18n="zh">应用服务</span>
-            </a>
-            <a href="#about">
-                <span data-i18n="pl">O nas</span>
-                <span data-i18n="en">About us</span>
-                <span data-i18n="de">Über uns</span>
-                <span data-i18n="es">Nosotros</span>
-                <span data-i18n="zh">关于我们</span>
-            </a>
-            <a href="/legal/">
-                <span data-i18n="pl">Polityka Prywatności</span>
-                <span data-i18n="en">Privacy Policy</span>
-                <span data-i18n="de">Datenschutzerklärung</span>
-                <span data-i18n="es">Política de Privacidad</span>
-                <span data-i18n="zh">隐私政策</span>
-            </a>
-            
+        <div class="footer-nav">
+            <div class="footer-col">
+                <h4>
+                    <span data-i18n="pl">Studio</span>
+                    <span data-i18n="en">Studio</span>
+                    <span data-i18n="de">Studio</span>
+                    <span data-i18n="es">Estudio</span>
+                    <span data-i18n="zh">工作室</span>
+                </h4>
+                <a href="#about"><span data-i18n="pl">O nas</span><span data-i18n="en">About us</span><span data-i18n="de">Über uns</span><span data-i18n="es">Nosotros</span><span data-i18n="zh">关于我们</span></a>
+                <a href="#products"><span data-i18n="pl">Projekty</span><span data-i18n="en">Projects</span><span data-i18n="de">Projekte</span><span data-i18n="es">Proyectos</span><span data-i18n="zh">项目</span></a>
+            </div>
+            <div class="footer-col">
+                <h4>
+                    <span data-i18n="pl">Polityki Prywatności</span>
+                    <span data-i18n="en">Privacy Policies</span>
+                    <span data-i18n="de">Datenschutzrichtlinien</span>
+                    <span data-i18n="es">Políticas de Privacidad</span>
+                    <span data-i18n="zh">隐私政策</span>
+                </h4>
+                <a href="/legal/index.html?app=ideaon">Ideaon</a>
+                <a href="/legal/index.html?app=kindhabit">KindHabit</a>
+            </div>
         </div>
         <p>&copy; 2026 Polychroma. <span data-i18n="pl">Wszelkie prawa zastrzeżone.</span><span data-i18n="en">All rights reserved.</span><span data-i18n="de">Alle Rechte vorbehalten.</span><span data-i18n="es">Todos los derechos reservados.</span><span data-i18n="zh">保留所有权利。</span></p>
     </footer>
@@ -506,7 +568,6 @@
             document.body.setAttribute('data-lang', lang);
             document.getElementById('langSelect').value = lang;
             
-            // Update document title dynamically based on language
             const titles = {
                 pl: "Polychroma - Studio Aplikacji Mobilnych",
                 en: "Polychroma - Mobile Apps Studio",
@@ -515,12 +576,9 @@
                 zh: "Polychroma - 移动应用工作室"
             };
             document.title = titles[lang] || titles[defaultLanguage];
-            
-            // Save preference
             localStorage.setItem('polychroma_pref_lang', lang);
         }
 
-        // Auto-detect browser language or load saved preference
         window.addEventListener('DOMContentLoaded', () => {
             const savedLang = localStorage.getItem('polychroma_pref_lang');
             if (savedLang && supportedLanguages.includes(savedLang)) {
@@ -535,7 +593,7 @@
                     changeLanguage(defaultLanguage);
                 }
             }
-         Wielojęzyczność });
+        });
     </script>
 </body>
 </html>
